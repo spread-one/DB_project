@@ -57,7 +57,7 @@ class ReservationServiceTest {
                 request.endTime
             )
         ).thenReturn(emptyList())
-        whenever(reservationRepository.save(any())).thenReturn(reservation)
+        whenever(reservationRepository.save(any<Reservation>())).thenReturn(reservation)
 
         // When
         val response = reservationService.createReservation(spaceId, request)
@@ -76,8 +76,9 @@ class ReservationServiceTest {
             request.startTime,
             request.endTime
         )
-        verify(reservationRepository).save(any())
+        verify(reservationRepository).save(any<Reservation>())
     }
+
 
     @Test
     fun `createReservation should throw exception when space not found`() {
