@@ -26,15 +26,21 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.springframework.boot:spring-boot-starter-validation") // 추가
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-	testImplementation("org.springframework.security:spring-security-test")
-	testImplementation("io.mockk:mockk:1.13.5")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "org.mockito") // 기본 Mockito 제거
+	}
+
+	// Mockito Kotlin 추가
+	testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+
+	// JUnit 관련 의존성
+	testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+
+	// JSON 처리 및 Java Time 지원
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 }
 

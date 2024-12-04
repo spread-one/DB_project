@@ -1,7 +1,3 @@
--- Database Creation
-CREATE DATABASE SpaceBookingDB;
-USE SpaceBookingDB;
-
 -- Created Space Table
 CREATE TABLE created_space (
     space_id INT AUTO_INCREMENT PRIMARY KEY,
