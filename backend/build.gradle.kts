@@ -20,28 +20,27 @@ repositories {
 }
 
 dependencies {
+	// Spring Boot 기본 의존성
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+	// Kotlin 및 JSON 처리
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	runtimeOnly("com.mysql:mysql-connector-j")
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(group = "org.mockito") // 기본 Mockito 제거
-	}
-
-	// Mockito Kotlin 추가
-	testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
-
-	// JUnit 관련 의존성
-	testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-
-	// JSON 처리 및 Java Time 지원
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+	// MySQL 연결
+	runtimeOnly("com.mysql:mysql-connector-j")
+
+	// 개발 환경용
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	// 테스트 의존성
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0") // Mockito Kotlin support
 }
 
 kotlin {

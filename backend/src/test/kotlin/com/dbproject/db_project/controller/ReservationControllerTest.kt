@@ -2,72 +2,111 @@ package com.dbproject.controller
 
 import com.dbproject.dto.CreateReservationRequest
 import com.dbproject.dto.ReservationResponse
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.dbproject.service.ReservationService
-import org.junit.jupiter.api.BeforeEach
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any // Mockito-Kotlin import
-import org.mockito.kotlin.whenever // Mockito-Kotlin import
+import org.mockito.kotlin.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.post
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(ReservationController::class)
 class ReservationControllerTest {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
 
+    @MockBean
+    private lateinit var reservationService: ReservationService
+
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @MockBean
-    private lateinit var reservationService: ReservationService // MockBean으로 설정
-
-    @BeforeEach
-    fun setup() {
-        // ObjectMapper 설정
-        objectMapper.registerModule(JavaTimeModule())
-
-        // Mock 동작 정의
-        whenever(reservationService.createReservation(any(), any())).thenReturn(
-            ReservationResponse(
-                id = 1,
-                reserverName = "John Doe",
-                startTime = LocalTime.of(10, 0),
-                endTime = LocalTime.of(12, 0),
-                createdSpace = 1
-            )
-        )
-    }
-
     @Test
-    fun `createReservation should return status 201`() {
+    fun `createReservation should return 201 and reservation response`() {
         // Given
         val spaceId = 1
         val request = CreateReservationRequest(
             reserverName = "John Doe",
-            startTime = LocalTime.of(10, 0),
-            endTime = LocalTime.of(12, 0)
+            startTime = LocalTime.of(9, 0),
+            endTime = LocalTime.of(10, 0)
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val reservationResponse = ReservationResponse(
+            id = 1,
+            reserverName = request.reserverName,
+            startTime = request.startTime,
+            endTime = request.endTime,
+            createdSpace = spaceId
+        )
+
+        whenever(reservationService.createReservation(eq(spaceId), any())).thenReturn(reservationResponse)
 
         // When & Then
-        mockMvc.perform(
-            post("/api/spaces/$spaceId/reservations")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+        mockMvc.post("/api/spaces/{spaceId}/reservations", spaceId) {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isCreated() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+            jsonPath("$.startTime") { value(reservationResponse.startTime.format(timeFormatter)) }
+            jsonPath("$.endTime") { value(reservationResponse.endTime.format(timeFormatter)) }
+        }
+
+
+        verify(reservationService).createReservation(eq(spaceId), any())
+    }
+
+    @Test
+    fun `createReservation should return 400 when request is invalid`() {
+        // Given
+        val spaceId = 1
+        val request = CreateReservationRequest(
+            reserverName = "",  // Invalid name (assuming @NotBlank or similar validation)
+            startTime = LocalTime.of(9, 0),
+            endTime = LocalTime.of(8, 0)  // Invalid time (end before start)
         )
-            .andDo(print()) // 디버깅 로그 출력
-            .andExpect(status().isCreated) // 상태 코드 201 확인
+
+        // When & Then
+        mockMvc.post("/api/spaces/{spaceId}/reservations", spaceId) {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isBadRequest() }
+        }
+
+        verifyNoInteractions(reservationService)
+    }
+
+    @Test
+    fun `createReservation should return 400 when service throws exception`() {
+        // Given
+        val spaceId = 1
+        val request = CreateReservationRequest(
+            reserverName = "John Doe",
+            startTime = LocalTime.of(9, 0),
+            endTime = LocalTime.of(10, 0)
+        )
+
+        whenever(reservationService.createReservation(eq(spaceId), any()))
+            .thenThrow(IllegalArgumentException("Time slot already reserved for space ID: $spaceId"))
+
+        // When & Then
+        mockMvc.post("/api/spaces/{spaceId}/reservations", spaceId) {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isBadRequest() }
+            content { string("Time slot already reserved for space ID: $spaceId") }
+        }
+
+        verify(reservationService).createReservation(eq(spaceId), any())
     }
 }
