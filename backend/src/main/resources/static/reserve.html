@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Space</title>
+</head>
+<body>
+<h1>Reserve Space</h1>
+<form id="reserve-form">
+    <label for="reserver-name">Your Name:</label><br>
+    <input type="text" id="reserver-name" name="reserver-name" required><br><br>
+
+    <label for="start-time">Start Time:</label><br>
+    <input type="time" id="start-time" name="start-time" required><br><br>
+
+    <label for="end-time">End Time:</label><br>
+    <input type="time" id="end-time" name="end-time" required><br><br>
+
+    <button type="submit">Reserve</button>
+</form>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const spaceId = params.get("spaceId");
+
+    document.getElementById("reserve-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const reserverName = document.getElementById("reserver-name").value;
+        const startTime = document.getElementById("start-time").value;
+        const endTime = document.getElementById("end-time").value;
+
+        const response = await fetch(`/api/spaces/${spaceId}/reservations`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reserverName, startTime, endTime })
+        });
+
+        if (response.ok) {
+            alert("Reservation successful!");
+            document.getElementById("reserve-form").reset();
+        } else {
+            alert("Failed to make a reservation.");
+        }
+    });
+</script>
+</body>
+</html>

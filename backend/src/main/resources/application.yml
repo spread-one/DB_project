@@ -2,8 +2,10 @@ server:
   port: 8000
 
 spring:
+  application:
+    name: db_project
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/?user=root
+    url: jdbc:mysql://127.0.0.1:3306/db_project?useSSL=false&serverTimezone=UTC
     username: root
     password: root
     initialization-mode: always
@@ -11,4 +13,3 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-    

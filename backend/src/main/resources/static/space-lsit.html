@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space List</title>
+</head>
+<body>
+<h1>Space List</h1>
+<ul id="space-list"></ul>
+
+<script>
+  async function fetchSpaces() {
+    const response = await fetch('/api/spaces');
+    if (response.ok) {
+      const spaces = await response.json();
+      const list = document.getElementById("space-list");
+      list.innerHTML = ""; // Clear previous list
+      spaces.forEach(space => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+                        <strong>${space.description}</strong>
+                        (Available: ${space.availableStartTime} - ${space.availableEndTime})
+                        <button onclick="reserveSpace(${space.id})">Reserve</button>
+                    `;
+        list.appendChild(listItem);
+      });
+    } else {
+      alert("Failed to fetch spaces.");
+    }
+  }
+
+  function reserveSpace(spaceId) {
+    window.location.href = `/reserve.html?spaceId=${spaceId}`;
+  }
+
+  fetchSpaces();
+</script>
+</body>
+</html>
