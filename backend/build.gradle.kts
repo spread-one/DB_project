@@ -41,6 +41,7 @@ dependencies {
 	// 테스트 의존성
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0") // Mockito Kotlin support
+	testImplementation("com.h2database:h2")
 }
 
 kotlin {

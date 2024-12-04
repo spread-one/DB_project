@@ -4,6 +4,7 @@ import com.dbproject.entity.CreatedSpace
 import com.dbproject.entity.Reservation
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.LocalTime
@@ -16,6 +17,12 @@ class ReservationRepositoryTest {
 
     @Autowired
     private lateinit var reservationRepository: ReservationRepository
+
+    @BeforeEach
+    fun setup() {
+        reservationRepository.deleteAll()
+        createdSpaceRepository.deleteAll()
+    }
 
     @Test
     fun `findByCreatedSpace should return reservations for a specific space`() {
