@@ -6,6 +6,5 @@ data class CreatedSpaceResponse(
     val id: Int,
     val description: String,
     val availableStartTime: LocalTime,
-    val availableEndTime: LocalTime,
-    val reservations: List<SimpleReservationResponse> = listOf()
+    val availableEndTime: LocalTime
 )

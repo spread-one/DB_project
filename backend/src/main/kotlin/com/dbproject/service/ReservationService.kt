@@ -1,8 +1,10 @@
-package com.dbproject.service  // 경로에 맞게 패키지 수정
+package com.dbproject.service
 
-import com.dbproject.entity.Reservation  // 수정된 엔터티 경로
-import com.dbproject.repository.ReservationRepository  // 수정된 리포지토리 경로
-import com.dbproject.repository.CreatedSpaceRepository  // 수정된 리포지토리 경로
+import com.dbproject.dto.CreateReservationRequest
+import com.dbproject.dto.ReservationResponse
+import com.dbproject.entity.Reservation
+import com.dbproject.repository.CreatedSpaceRepository
+import com.dbproject.repository.ReservationRepository
 import org.springframework.stereotype.Service
 import java.time.LocalTime
 
@@ -13,24 +15,34 @@ class ReservationService(
 ) {
 
     // 예약 생성
-    fun createReservation(spaceId: Int, reserverName: String, startTime: LocalTime, endTime: LocalTime): Reservation {
-        val space = createdSpaceRepository.findById(spaceId)
-            .orElseThrow { IllegalArgumentException("Space not found with ID: $spaceId") }
+    fun createReservation(request: CreateReservationRequest): ReservationResponse {
+        val space = createdSpaceRepository.findById(request.spaceId)
+            .orElseThrow { IllegalArgumentException("Space not found with ID: ${request.spaceId}") }
 
-        // 예약 시간 중복 확인
+        // 중복 예약 확인
         val overlappingReservations = reservationRepository.findByStartTimeBetweenOrEndTimeBetween(
-            startTime, endTime, startTime, endTime
+            request.startTime, request.endTime, request.startTime, request.endTime
         )
         if (overlappingReservations.isNotEmpty()) {
             throw IllegalArgumentException("Time slot already reserved")
         }
 
+        // 새 예약 생성 및 저장
         val reservation = Reservation(
-            reserverName = reserverName,
+            reserverName = request.reserverName,
             createdSpace = space,
-            startTime = startTime,
-            endTime = endTime
+            startTime = request.startTime,
+            endTime = request.endTime
         )
-        return reservationRepository.save(reservation)
+        val savedReservation = reservationRepository.save(reservation)
+
+        // ReservationResponse 반환
+        return ReservationResponse(
+            id = savedReservation.id,
+            reserverName = savedReservation.reserverName,
+            startTime = savedReservation.startTime,
+            endTime = savedReservation.endTime,
+            createdSpaceId = space.id
+        )
     }
 }
