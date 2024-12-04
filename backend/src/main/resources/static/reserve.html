@@ -4,25 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserve Space</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Reserve Space</h1>
-<form id="reserve-form">
-    <label for="reserver-name">Your Name:</label><br>
-    <input type="text" id="reserver-name" name="reserver-name" required><br><br>
+<header>
+    <nav>
+        <a href="space-list.html">공간 목록</a>
+        <a>OPEN SPACE</a>
+        <a href="space-create.html">공간 생성</a>
+    </nav>
+</header>
 
-    <label for="start-time">Start Time:</label><br>
-    <input type="time" id="start-time" name="start-time" required><br><br>
+<main>
+    <h1>공간 예약</h1>
+    <form id="reserve-form">
+        <label for="reserver-name">예약자 이름:</label><br>
+        <input type="text" id="reserver-name" name="reserver-name" required><br><br>
 
-    <label for="end-time">End Time:</label><br>
-    <input type="time" id="end-time" name="end-time" required><br><br>
+        <label for="start-time">예약 시작 시간:</label><br>
+        <input type="time" id="start-time" name="start-time" required><br><br>
 
-    <button type="submit">Reserve</button>
-</form>
+        <label for="end-time">예약 종료 시간:</label><br>
+        <input type="time" id="end-time" name="end-time" required><br><br>
+
+        <button type="submit">예약</button>
+    </form>
+</main>
 
 <script>
     const params = new URLSearchParams(window.location.search);
     const spaceId = params.get("spaceId");
+
+    // Fetch and display space details
+    async function fetchSpaceDetails() {
+        const response = await fetch(`/api/spaces/${spaceId}`);
+        if (response.ok) {
+            const space = await response.json();
+            const mainElement = document.querySelector("main");
+
+            // Display available time
+            const availabilityInfo = document.createElement("p");
+            availabilityInfo.textContent = `이용 가능 시간: ${space.availableStartTime} - ${space.availableEndTime}`;
+            mainElement.insertBefore(availabilityInfo, document.getElementById("reserve-form"));
+        } else {
+            alert("Failed to fetch space details.");
+        }
+    }
 
     document.getElementById("reserve-form").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -39,10 +66,37 @@
         if (response.ok) {
             alert("Reservation successful!");
             document.getElementById("reserve-form").reset();
+            fetchReservations(); // Reload reservations after successful booking
         } else {
             alert("Failed to make a reservation.");
         }
     });
+
+    async function fetchReservations() {
+        const response = await fetch(`/api/spaces/${spaceId}/reservations`);
+        const reservationList = document.getElementById("reservation-items");
+        reservationList.innerHTML = ""; // Clear the list
+
+        if (response.ok) {
+            const reservations = await response.json();
+            if (reservations.length === 0) {
+                reservationList.innerHTML = "<li>No reservations found.</li>";
+            } else {
+                reservations.forEach(reservation => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = `${reservation.reserverName}: ${reservation.startTime} - ${reservation.endTime}`;
+                    reservationList.appendChild(listItem);
+                });
+            }
+        } else {
+            alert("Failed to fetch reservations.");
+        }
+    }
+
+    // Initial load
+    fetchSpaceDetails();
+    fetchReservations();
 </script>
+
 </body>
 </html>

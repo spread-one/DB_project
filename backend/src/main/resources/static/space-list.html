@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <a href="space-list.html">공간 목록</a>
+    <a>OPEN SPACE</a>
+    <a href="space-create.html">공간 생성</a>
+  </nav>
+</header>
+
+<main>
+  <h1>공간 목록</h1>
+  <ul id="space-list"></ul>
+</main>
+
+<script>
+  async function fetchSpaces() {
+    const response = await fetch('/api/spaces');
+    if (response.ok) {
+      const spaces = await response.json();
+      const list = document.getElementById("space-list");
+      list.innerHTML = ""; // Clear previous list
+      spaces.forEach(space => {
+        const listItem = document.createElement("li");
+
+        // Basic space information
+        listItem.innerHTML = `
+          <strong>${space.description}</strong>
+          (이용 가능 시간: ${space.availableStartTime} - ${space.availableEndTime})
+          <button onclick="reserveSpace(${space.id})">예약하기</button>
+          <div id="reservations-${space.id}" class="reservations"></div>
+        `;
+
+        list.appendChild(listItem);
+
+        // Fetch and display reservations for the space
+        fetchReservations(space.id);
+      });
+    } else {
+      alert("Failed to fetch spaces.");
+    }
+  }
+
+  async function fetchReservations(spaceId) {
+    const response = await fetch(`/api/spaces/${spaceId}/reservations`);
+    if (response.ok) {
+      const reservations = await response.json();
+      const reservationsDiv = document.getElementById(`reservations-${spaceId}`);
+      reservationsDiv.innerHTML = "<h4>Reservations:</h4>";
+
+      if (reservations.length === 0) {
+        reservationsDiv.innerHTML += "<p>No reservations found.</p>";
+      } else {
+        const reservationList = document.createElement("ul");
+        reservations.forEach(reservation => {
+          const listItem = document.createElement("li");
+          listItem.textContent = `${reservation.reserverName}: ${reservation.startTime} - ${reservation.endTime}`;
+          reservationList.appendChild(listItem);
+        });
+        reservationsDiv.appendChild(reservationList);
+      }
+    } else {
+    }
+  }
+
+  function reserveSpace(spaceId) {
+    window.location.href = `/reserve.html?spaceId=${spaceId}`;
+  }
+
+  fetchSpaces();
+</script>
+</body>
+</html>

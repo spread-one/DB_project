@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Space</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Create Space</h1>
-<form id="create-space-form">
-    <label for="description">Description:</label><br>
-    <input type="text" id="description" name="description" required><br><br>
+<header>
+    <nav>
+        <a href="space-list.html">공간 목록</a>
+        <a>OPEN SPACE</a>
+        <a href="space-create.html">공간 생성</a>
+    </nav>
+</header>
 
-    <label for="start-time">Start Time:</label><br>
-    <input type="time" id="start-time" name="start-time" required><br><br>
+<main>
+    <h1>공간 생성</h1>
+    <form id="create-space-form">
+        <label for="description">공간 이름 및 설명:</label><br>
+        <input type="text" id="description" name="description" required><br><br>
 
-    <label for="end-time">End Time:</label><br>
-    <input type="time" id="end-time" name="end-time" required><br><br>
+        <label for="start-time">예약 가능 시작 시간:</label><br>
+        <input type="time" id="start-time" name="start-time" required><br><br>
 
-    <button type="submit">Create Space</button>
-</form>
+        <label for="end-time">예약 가능 종료 시간:</label><br>
+        <input type="time" id="end-time" name="end-time" required><br><br>
+
+        <button type="submit">공간 생성</button>
+    </form>
+</main>
 
 <script>
     document.getElementById("create-space-form").addEventListener("submit", async (e) => {
@@ -36,6 +47,7 @@
         if (response.ok) {
             alert("Space created successfully!");
             document.getElementById("create-space-form").reset();
+            window.location.href = "space-list.html";
         } else {
             alert("Failed to create space.");
         }
