@@ -7,5 +7,5 @@ data class ReservationResponse(
     val reserverName: String,
     val startTime: LocalTime,
     val endTime: LocalTime,
-    val createdSpace: CreatedSpaceResponse
+    val createdSpace: Int
 )

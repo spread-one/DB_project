@@ -1,3 +1,11 @@
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.boot.autoconfigure.domain.EntityScan
+import javax.sql.DataSource
+import com.zaxxer.hikari.HikariDataSource
+
+
 @Configuration
 @EnableJpaRepositories(basePackages = ["com.dbproject.repository"])
 @EntityScan(basePackages = ["com.dbproject.entity"])

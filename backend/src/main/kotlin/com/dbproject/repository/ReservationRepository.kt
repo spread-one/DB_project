@@ -11,11 +11,10 @@ interface ReservationRepository : JpaRepository<Reservation, Int> {
     // 특정 공간의 예약 목록 조회
     fun findByCreatedSpace(createdSpace: CreatedSpace): List<Reservation>
 
-    // 특정 시간대에 예약 겹침 여부 확인
-    fun findByStartTimeBetweenOrEndTimeBetween(
+    // 특정 공간에서 특정 시간대에 예약 겹침 여부 확인
+    fun findByCreatedSpaceAndStartTimeLessThanAndEndTimeGreaterThan(
+        createdSpace: CreatedSpace,
         startTime: LocalTime,
-        endTime: LocalTime,
-        overlapStartTime: LocalTime,
-        overlapEndTime: LocalTime
+        endTime: LocalTime
     ): List<Reservation>
 }

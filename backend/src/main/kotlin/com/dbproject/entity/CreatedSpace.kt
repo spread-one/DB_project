@@ -17,8 +17,8 @@ data class CreatedSpace(
     val availableStartTime: java.time.LocalTime,
 
     @Column(name = "available_end_time", nullable = false)
-    val availableEndTime: java.time.LocalTime
-)
+    val availableEndTime: java.time.LocalTime,
 
-@OneToMany(mappedBy = "createdSpace", cascade = [CascadeType.ALL], orphanRemoval = true)
-val reservations: List<Reservation> = mutableListOf()
+    @OneToMany(mappedBy = "createdSpace", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val reservations: MutableList<Reservation> = mutableListOf()
+)
