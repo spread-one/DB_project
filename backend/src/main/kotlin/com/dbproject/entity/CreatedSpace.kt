@@ -1,4 +1,4 @@
-package com.yourproject.entity
+package com.dbproject.entity
 
 import jakarta.persistence.*
 

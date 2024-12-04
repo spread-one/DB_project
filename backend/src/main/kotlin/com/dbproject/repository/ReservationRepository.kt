@@ -1,7 +1,7 @@
-package com.yourproject.repository
+package com.dbproject.repository  // 경로에 맞게 패키지 수정
 
-import com.yourproject.entity.Reservation
-import com.yourproject.entity.CreatedSpace
+import com.dbproject.entity.Reservation  // 수정된 엔터티 경로
+import com.dbproject.entity.CreatedSpace  // 수정된 엔터티 경로
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalTime

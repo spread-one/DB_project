@@ -1,4 +1,4 @@
-package com.dbproject.db_project
+package com.dbproject
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

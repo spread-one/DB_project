@@ -1,7 +1,7 @@
-package com.yourproject.service
+package com.dbproject.service  // 경로에 맞게 패키지 수정
 
-import com.yourproject.entity.CreatedSpace
-import com.yourproject.repository.CreatedSpaceRepository
+import com.dbproject.entity.CreatedSpace  // 수정된 엔터티 경로
+import com.dbproject.repository.CreatedSpaceRepository  // 수정된 리포지토리 경로
 import org.springframework.stereotype.Service
 
 @Service

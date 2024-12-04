@@ -1,6 +1,6 @@
 @Configuration
-@EnableJpaRepositories(basePackages = ["com.yourproject.repository"])
-@EntityScan(basePackages = ["com.yourproject.entity"])
+@EnableJpaRepositories(basePackages = ["com.dbproject.repository"])
+@EntityScan(basePackages = ["com.dbproject.entity"])
 class DatabaseConfig {
     
     @Bean

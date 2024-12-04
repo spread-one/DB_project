@@ -1,6 +1,6 @@
-package com.yourproject.repository
+package com.dbproject.repository  // 변경된 경로에 맞춰 패키지 수정
 
-import com.yourproject.entity.CreatedSpace
+import com.dbproject.entity.CreatedSpace  // 엔터티의 경로도 수정
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
