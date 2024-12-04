@@ -1,19 +1,29 @@
-# DB_project
-
 project-root/
 ├── backend/                         # 백엔드 코드
-│   ├── src/main/kotlin/com/yourproject
-│   │   ├── config/                  # 설정 파일
-│   │   ├── controller/              # 컨트롤러 계층
-│   │   ├── dto/                     # 요청/응답 객체
-│   │   ├── entity/                  # 데이터베이스 엔터티 클래스
-│   │   ├── repository/              # 데이터 접근 계층
-│   │   ├── service/                 # 비즈니스 로직 계층
-│   │   ├── exception/               # 예외 처리
-│   │   └── YourProjectApplication.kt
+│   ├── src/
+│   │   ├── main/                    # 애플리케이션 실행 및 소스 코드
+│   │   │   ├── kotlin/com/yourproject/
+│   │   │   │   ├── config/          # 설정 파일
+│   │   │   │   ├── controller/      # 컨트롤러 계층
+│   │   │   │   ├── dto/             # 요청/응답 객체
+│   │   │   │   ├── entity/          # 데이터베이스 엔터티 클래스
+│   │   │   │   ├── repository/      # 데이터 접근 계층
+│   │   │   │   ├── service/         # 비즈니스 로직 계층
+│   │   │   │   ├── exception/       # 예외 처리
+│   │   │   │   └── YourProjectApplication.kt  # 메인 애플리케이션 실행 파일
+│   │   │   ├── resources/           # 리소스 파일
+│   │   │   │   ├── application.yml  # Spring Boot 설정 파일
+│   │   │   │   ├── static/          # 정적 리소스 (이미지, CSS, JS)
+│   │   │   │   ├── templates/       # 템플릿 파일 (Thymeleaf 등)
+│   │   │   │   └── db/              # 초기 SQL 스크립트 (schema, seed 등)
+│   │   ├── test/                    # 테스트 코드
+│   │       ├── kotlin/com/yourproject/
+│   │       │   ├── controller/      # 컨트롤러 테스트
+│   │       │   ├── service/         # 서비스 테스트
+│   │       │   └── repository/      # 데이터베이스 테스트
 │   ├── build.gradle.kts             # Gradle 빌드 스크립트
-│   ├── application.yml              # Spring Boot 설정 파일
-│   └── Dockerfile                   # 백엔드용 Dockerfile
+│   ├── Dockerfile                   # 백엔드용 Dockerfile
+│   └── .gitignore                   # Git 무시 파일
 │
 ├── frontend/                        # 프론트엔드 코드
 │   ├── public/                      # 정적 파일 (HTML, favicon 등)

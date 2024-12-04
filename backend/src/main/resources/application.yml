@@ -1,6 +1,9 @@
+server:
+  port: 8000
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/reservation_db
+    url: jdbc:mysql://127.0.0.1:3306/?user=root
     username: root
     password: root
   jpa:
