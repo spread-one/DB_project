@@ -13,5 +13,5 @@ CREATE TABLE reservation (
                              space_id INT,
                              start_time TIME NOT NULL,
                              end_time TIME NOT NULL,
-                             FOREIGN KEY (space_id) REFERENCES created_space(space_id)
+                             FOREIGN KEY (space_id) REFERENCES created_space(space_id) ON DELETE CASCADE
 );
